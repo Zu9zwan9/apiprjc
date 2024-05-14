@@ -13,7 +13,7 @@ const cron = require('node-cron');
 const dotenv = require('dotenv');
 require('dotenv').config();
 const isDevelopmentEnvironment = process.env.NODE_ENV !== 'production';
-
+require('dotenv').config();
 
 const SERVER_PORT = process.env.PORT;
 
@@ -21,7 +21,7 @@ const app = express();
 
 app.use(cors());
 
-const session = require('express-session');
+const session = require('cookie-session');
 
 app.use(session({
     secret: 'Enter your secret key',
@@ -93,7 +93,7 @@ const auctionStatusEnum = require('./types/enums/auctionStatusEnum');
 const {compareSync} = require("bcrypt");
 
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('* * * * * *', async () => {
     console.log("cron tab");
 
     console.log("time: ", Math.floor(Date.now() / 1000));
