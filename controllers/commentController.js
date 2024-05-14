@@ -3,9 +3,6 @@ const Comment = require("../models/comment");
 const bcrypt = require('bcrypt');
 
 
-
-
-
 exports.comment_get_by_auction_id = asyncHandler(async (req, res, next) => {
 
     const result = await Comment.find({auctionId: req.params.id}).sort({_id: "desc"});
