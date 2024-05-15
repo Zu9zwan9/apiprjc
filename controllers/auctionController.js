@@ -4,33 +4,19 @@ const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
-const { bucket } = require("../middleware/firebase-config");
 
-async function uploadThumbnail(file) {
-    if (!file) return null;
-    const blob = bucket.file(file.originalname);
-    const blobStream = blob.createWriteStream({
-        metadata: {
-            contentType: file.mimetype,
-        }
-    });
 
-    return new Promise((resolve, reject) => {
-        blobStream.on('error', reject);
-        blobStream.on('finish', async () => {
-            try {
-                await blob.makePublic();
-                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-                resolve(publicUrl);
-            } catch (err) {
-                reject(err);
-            }
-        });
+// Configure multer storage
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
 
-        blobStream.end(file.buffer);
-    });
-}
+const upload = multer({ storage: storage });
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
     upload.single('thumbnail_file')(req, res, async (err) => {
@@ -42,7 +28,7 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
         const thumbnailFile = req.file;
 
         try {
-            const thumbnailUrl = thumbnailFile ? await uploadThumbnail(thumbnailFile) : null;
+            const thumbnailUrl = thumbnailFile ? '/uploads/' + thumbnailFile.filename : null;
 
             const auction = new Auction({
                 ...auctionData,
