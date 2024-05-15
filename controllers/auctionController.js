@@ -43,7 +43,7 @@ exports.auction_create = upload.single('thumbnail_file', asyncHandler(async (req
         // Handle case where there is no file uploaded
         res.status(400).send('No image file uploaded.');
     }
-});
+}));
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
 
