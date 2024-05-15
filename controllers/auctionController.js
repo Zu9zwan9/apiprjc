@@ -3,41 +3,58 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
+const {bucket} = require("../middleware/firebase-config");
+const {single} = require("../middleware/multerConfig");
 
-exports.auction_create = asyncHandler(async (req, res, next) => {
-
-    const auction = new Auction(req.body);
-
-    if (req.files) {
-        const {thumbnail_file} = req.files;
-
-
-        if (thumbnail_file) {
-            auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
-
-            await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
+async function uploadThumbnail(file) {
+    if (!file) return null;
+    const blob = bucket.file(file.originalname);
+    const blobStream = blob.createWriteStream({
+        metadata: {
+            contentType: file.mimetype,
         }
-    }
+    });
 
-    auction.dateCreate = Date.now();
-    auction.viewCount = 0;
+    return new Promise((resolve, reject) => {
+        blobStream.on('err', reject);
+        blobStream.on('finish', async () => {
+            await blob.makePublic();
+            resolve(blob.publicUrl());
+        });
+        blobStream.end(file.buffer);
+    });
+}
 
 
-    if (auction.dateClose) {
-        const time = new Date(auction.dateClose * 1000).getTime();
-
-        if (time < Date.now()) {
-            auction.status = auctionStatusEnum.CLOSE
-        } else {
-            auction.status = auctionStatusEnum.ACTIVE;
+exports.auction_create = asyncHandler(async (req, res) => {
+    single('thumbnail_file')(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
         }
-    }
-    //console.log(Date.now());
-    //console.log((auction.dateClose) ? new  Date(auction.dateClose*1000).getTime() : "undefined");
 
-    const result = await auction.save();
+        const auctionData = req.body;
+        const thumbnailFile = req.file;
+        let thumbnailUrl = null;
 
-    res.json(result);
+        try {
+            thumbnailUrl = await uploadThumbnail(thumbnailFile);
+        } catch (error) {
+            return res.status(500).json({ message: error.message }); // Use the specific error message
+        }
+
+            const auction = new Auction({
+                ...auctionData,
+                thumbnail: thumbnailUrl,
+                dateCreate: Date.now(),
+                viewCount: 0,
+                status: auctionData.dateClose
+                    ? (auctionData.dateClose * 1000 < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE)
+                    : auctionStatusEnum.ACTIVE
+            });
+
+        const result = await auction.save();
+        res.status(201).json(result);
+    });
 });
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
