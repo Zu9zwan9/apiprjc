@@ -5,7 +5,8 @@ const path = require('path');
 const AuctionRate = require("../models/auctionRate");
 const { single } = require("../middleware/multerConfig");
 const {bucket} = require("../middleware/firebase-config");
-
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 async function uploadThumbnail(file) {
     if (!file) return null;
     const blob = bucket.file(file.originalname);
@@ -32,7 +33,7 @@ async function uploadThumbnail(file) {
 }
 
 exports.auction_create = asyncHandler(async (req, res) => {
-    single('thumbnail_file')(req, res, async (err) => {
+    upload.single('thumbnail_file')(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ message: err.message });
         }
