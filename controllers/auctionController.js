@@ -3,46 +3,50 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
-const multer = require('multer');
-const upload = require('../middleware/multerConfig'); // Assuming multer is configured as shown above
-const { bucket } = require("../middleware/firebase-config"); // Ensure this is correctly pointing to your Firebase config
+const {bucket} = require("../middleware/firebase-config");
+const {single} = require("../middleware/multerConfig");
 
-exports.auction_create = upload.single('thumbnail_file', asyncHandler(async (req, res, next) =>{
-    const auction = new Auction(req.body);
+exports.auction_create = single('thumbnail_file', asyncHandler(async (req, res, next) => {
+    try {
+        const auction = new Auction(req.body);
 
-    if (req.file) { // Checking if there's a file in the request processed by multer
-        const newFileName = `${Date.now()}_${path.extname(req.file.originalname)}`;
-        const blob = bucket.file(newFileName);
-        const blobStream = blob.createWriteStream({
-            metadata: {
-                contentType: req.file.mimetype
-            }
-        });
+        if (req.file) {
+            const newFileName = `auction_${Date.now()}${path.extname(req.file.originalname)}`;
+            const blob = bucket.file(newFileName);
+            const blobStream = blob.createWriteStream({
+                metadata: {
+                    contentType: req.file.mimetype
+                }
+            });
 
-        blobStream.on('error', err => next(err));
+            blobStream.on('error', err => next(err));
 
-        blobStream.on('finish', async () => {
-            // Constructing the public URL for the file
-            auction.thumbnail = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            blobStream.on('finish', async () => {
+                // Construct the public URL for the image
+                await blob.makePublic();
+                const url = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                auction.thumbnail = url;
 
-            // Setting up other auction properties
-            auction.dateCreate = Date.now();
-            auction.viewCount = 0;
-            if (auction.dateClose) {
-                const time = new Date(auction.dateClose * 1000).getTime();
-                auction.status = time < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE;
-            }
+                auction.dateCreate = Date.now();
+                auction.viewCount = 0;
 
-            // Save the auction after image URL setup
-            const result = await auction.save();
-            res.json(result);
-        });
+                if (auction.dateClose) {
+                    const time = new Date(auction.dateClose * 1000).getTime();
+                    auction.status = time < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE;
+                }
 
-        blobStream.end(req.file.buffer);
-    } else {
-        // Handle case where there is no file uploaded
-        res.status(400).send('No image file uploaded.');
+                const result = await auction.save();
+                res.json(result);
+            });
+
+            blobStream.end(req.file.buffer);
+        } else {
+             new Error('No file uploaded');
+        }
+    } catch (error) {
+        res.status(500).send(error.message || 'Server Error');
     }
+
 }));
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
