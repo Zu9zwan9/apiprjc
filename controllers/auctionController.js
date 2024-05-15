@@ -3,10 +3,10 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
-const { single } = require("../middleware/multerConfig");
-const {bucket} = require("../middleware/firebase-config");
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
+const { bucket } = require("../middleware/firebase-config");
+
 async function uploadThumbnail(file) {
     if (!file) return null;
     const blob = bucket.file(file.originalname);
@@ -32,25 +32,25 @@ async function uploadThumbnail(file) {
     });
 }
 
-exports.auction_create = asyncHandler(async (req, res) => {
+exports.auction_create = asyncHandler(async (req, res, next) => {
     upload.single('thumbnail_file')(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ message: err.message });
         }
 
-        const auction = req.body;
+        const auctionData = req.body;
         const thumbnailFile = req.file;
 
         try {
             const thumbnailUrl = thumbnailFile ? await uploadThumbnail(thumbnailFile) : null;
 
             const auction = new Auction({
-                ...auction,
+                ...auctionData,
                 thumbnail: thumbnailUrl,
                 dateCreate: Date.now(),
                 viewCount: 0,
-                status: auction.dateClose
-                    ? (auction.dateClose * 1000 < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE)
+                status: auctionData.dateClose
+                    ? (auctionData.dateClose * 1000 < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE)
                     : auctionStatusEnum.ACTIVE
             });
 
