@@ -38,19 +38,19 @@ exports.auction_create = asyncHandler(async (req, res) => {
             return res.status(400).json({ message: err.message });
         }
 
-        const auctionData = req.body;
+        const auction = req.body;
         const thumbnailFile = req.file;
 
         try {
             const thumbnailUrl = thumbnailFile ? await uploadThumbnail(thumbnailFile) : null;
 
             const auction = new Auction({
-                ...auctionData,
+                ...auction,
                 thumbnail: thumbnailUrl,
                 dateCreate: Date.now(),
                 viewCount: 0,
-                status: auctionData.dateClose
-                    ? (auctionData.dateClose * 1000 < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE)
+                status: auction.dateClose
+                    ? (auction.dateClose * 1000 < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE)
                     : auctionStatusEnum.ACTIVE
             });
 
