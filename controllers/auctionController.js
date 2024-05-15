@@ -3,47 +3,41 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
-const {bucket} = require("../middleware/firebase-config");
-const {single} = require("../middleware/multerConfig");
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
-    try {
-        const auction = new Auction(req.body);
 
-        if (req.file) {
-            const newFileName = `auction_${Date.now()}${path.extname(req.file.originalname)}`;
-            const blob = bucket.file(newFileName);
-            const blobStream = blob.createWriteStream({
-                metadata: {
-                    contentType: req.file.mimetype
-                }
-            });
+    const auction = new Auction(req.body);
 
-            blobStream.on('error', err => next(err));
-            blobStream.on('finish', async () => {
-                // Make the file publicly accessible
-                await blob.makePublic();
-                auction.thumbnail = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    if (req.files) {
+        const {thumbnail_file} = req.files;
 
-                auction.dateCreate = Date.now();
-                auction.viewCount = 0;
 
-                if (auction.dateClose) {
-                    const time = new Date(auction.dateClose * 1000).getTime();
-                    auction.status = time < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE;
-                }
+        if (thumbnail_file) {
+            auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
 
-                await auction.save();
-                res.json(auction);
-            });
-
-            blobStream.end(req.file.buffer);
-        } else {
-            throw new Error('No file uploaded');
+            await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
         }
-    } catch (error) {
-        res.status(500).send(error.message || 'Server Error');
     }
+
+    auction.dateCreate = Date.now();
+    auction.viewCount = 0;
+
+
+    if (auction.dateClose) {
+        const time = new Date(auction.dateClose * 1000).getTime();
+
+        if (time < Date.now()) {
+            auction.status = auctionStatusEnum.CLOSE
+        } else {
+            auction.status = auctionStatusEnum.ACTIVE;
+        }
+    }
+    //console.log(Date.now());
+    //console.log((auction.dateClose) ? new  Date(auction.dateClose*1000).getTime() : "undefined");
+
+    const result = await auction.save();
+
+    res.json(result);
 });
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
