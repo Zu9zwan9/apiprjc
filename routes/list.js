@@ -41,5 +41,6 @@ module.exports = Router({mergeParams: true})
     .get('/auction/:id', auctionController.auction_get_by_id)
     .get('/comment/auction/:id', commentController.comment_get_by_auction_id)
     .post('/comment', commentController.comment_create)
-    .post('/auction/create', upload.single('thumbnail_file'), auctionController.auction_create);
+router.post('/auction/create', upload.single('thumbnail_file'), auctionController.auction_create);
 
+module.exports = router;

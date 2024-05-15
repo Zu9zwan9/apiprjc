@@ -6,7 +6,7 @@ const AuctionRate = require("../models/auctionRate");
 const {bucket} = require("../middleware/firebase-config");
 const {single} = require("../middleware/multerConfig");
 
-exports.auction_create = single('thumbnail_file', asyncHandler(async (req, res, next) => {
+exports.auction_create = asyncHandler(async (req, res, next) => {
     try {
         const auction = new Auction(req.body);
 
@@ -20,9 +20,8 @@ exports.auction_create = single('thumbnail_file', asyncHandler(async (req, res, 
             });
 
             blobStream.on('error', err => next(err));
-
             blobStream.on('finish', async () => {
-                // Construct the public URL for the image
+                // Make the file publicly accessible
                 await blob.makePublic();
                 const url = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
                 auction.thumbnail = url;
@@ -35,19 +34,18 @@ exports.auction_create = single('thumbnail_file', asyncHandler(async (req, res, 
                     auction.status = time < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE;
                 }
 
-                const result = await auction.save();
-                res.json(result);
+                await auction.save();
+                res.json(auction);
             });
 
             blobStream.end(req.file.buffer);
         } else {
-             new Error('No file uploaded');
+            throw new Error('No file uploaded');
         }
     } catch (error) {
         res.status(500).send(error.message || 'Server Error');
     }
-
-}));
+});
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
 
