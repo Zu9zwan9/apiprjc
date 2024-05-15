@@ -4,19 +4,8 @@ const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
 const multer = require('multer');
-
-
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './uploads/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
+const {bucket} = require("../middleware/firebase-config");
+const upload = multer({ storage: multer.memoryStorage() });
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
     upload.single('thumbnail_file')(req, res, async (err) => {
@@ -24,27 +13,46 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             return res.status(400).json({ message: err.message });
         }
 
-        const auctionData = req.body;
+        const auction = new Auction(req.body);
         const thumbnailFile = req.file;
 
-        try {
-            const thumbnailUrl = thumbnailFile ? '/uploads/' + thumbnailFile.filename : null;
-
-            const auction = new Auction({
-                ...auctionData,
-                thumbnail: thumbnailUrl,
-                dateCreate: Date.now(),
-                viewCount: 0,
-                status: auctionData.dateClose
-                    ? (auctionData.dateClose * 1000 < Date.now() ? auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE)
-                    : auctionStatusEnum.ACTIVE
+        if (thumbnailFile) {
+            const blob = bucket.file(thumbnailFile.originalname.replace(/ /g, "_"));
+            const blobStream = blob.createWriteStream({
+                metadata: {
+                    contentType: thumbnailFile.mimetype
+                }
             });
 
-            const result = await auction.save();
-            res.status(201).json(result);
-        } catch (error) {
-            console.error("Error creating auction or uploading thumbnail:", error);
-            res.status(500).json({ message: "An error occurred while creating the auction" });
+            blobStream.on('error', (err) => {
+                next(err);
+            });
+
+            blobStream.on('finish', async () => {
+                // Make the image public and get the URL
+                await blob.makePublic();
+                const url = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+
+                auction.thumbnail = url;
+                auction.dateCreate = Date.now();
+                auction.viewCount = 0;
+
+                if (auction.dateClose) {
+                    const time = new Date(auction.dateClose * 1000).getTime();
+
+                    if (time < Date.now()) {
+                        auction.status = auctionStatusEnum.CLOSE
+                    } else {
+                        auction.status = auctionStatusEnum.ACTIVE;
+                    }
+                }
+
+                const result = await auction.save();
+
+                res.json(result);
+            });
+
+            blobStream.end(thumbnailFile.buffer);
         }
     });
 });
