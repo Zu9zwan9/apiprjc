@@ -3,8 +3,8 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
+const { single } = require("../middleware/multerConfig");
 const {bucket} = require("../middleware/firebase-config");
-const {single} = require("../middleware/multerConfig");
 
 async function uploadThumbnail(file) {
     if (!file) return null;
@@ -16,15 +16,20 @@ async function uploadThumbnail(file) {
     });
 
     return new Promise((resolve, reject) => {
-        blobStream.on('err', reject);
+        blobStream.on('error', reject);
         blobStream.on('finish', async () => {
-            await blob.makePublic();
-            resolve(blob.publicUrl());
+            try {
+                await blob.makePublic();
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                resolve(publicUrl);
+            } catch (err) {
+                reject(err);
+            }
         });
+
         blobStream.end(file.buffer);
     });
 }
-
 
 exports.auction_create = asyncHandler(async (req, res) => {
     single('thumbnail_file')(req, res, async (err) => {
@@ -34,13 +39,9 @@ exports.auction_create = asyncHandler(async (req, res) => {
 
         const auctionData = req.body;
         const thumbnailFile = req.file;
-        let thumbnailUrl = null;
 
         try {
-            thumbnailUrl = await uploadThumbnail(thumbnailFile);
-        } catch (error) {
-            return res.status(500).json({ message: error.message }); // Use the specific error message
-        }
+            const thumbnailUrl = thumbnailFile ? await uploadThumbnail(thumbnailFile) : null;
 
             const auction = new Auction({
                 ...auctionData,
@@ -52,8 +53,12 @@ exports.auction_create = asyncHandler(async (req, res) => {
                     : auctionStatusEnum.ACTIVE
             });
 
-        const result = await auction.save();
-        res.status(201).json(result);
+            const result = await auction.save();
+            res.status(201).json(result);
+        } catch (error) {
+            console.error("Error creating auction or uploading thumbnail:", error);
+            res.status(500).json({ message: "An error occurred while creating the auction" });
+        }
     });
 });
 
