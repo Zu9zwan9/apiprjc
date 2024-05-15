@@ -9,7 +9,14 @@ const commentController = require("../controllers/commentController");
 const categoryController = require("../controllers/categoryController");
 const auctionController = require("../controllers/auctionController");
 const authenticateToken = require("../middleware/authenticateToken");
+const multer = require('multer');
 
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // limit to 5MB
+    },
+});
 module.exports = Router({mergeParams: true})
 
     .get('/category/list', categoryController.category_list)
@@ -36,4 +43,5 @@ module.exports = Router({mergeParams: true})
     .get('/auction/:id', auctionController.auction_get_by_id)
     .get('/comment/auction/:id', commentController.comment_get_by_auction_id)
     .post('/comment', commentController.comment_create)
+
 ;

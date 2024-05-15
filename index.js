@@ -195,7 +195,7 @@ server.on("connection", (socket) => {
         auctionRate.userName = data.user.name;
         auctionRate.auctionId = data.auctionId;
 
-        auctionRate.save();
+        await auctionRate.save();
 
       
         
