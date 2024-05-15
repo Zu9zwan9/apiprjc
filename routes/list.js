@@ -32,7 +32,6 @@ module.exports = Router({mergeParams: true})
     .get('/user-auction/:id', auctionController.user_auction_list)
     .get('/user/:id', userController.user_get_by_id)
     .post('/user/:id', userController.user_edit_by_id)
-    .post('/auction/create', auctionController.auction_create)
     .post('/auction/delete', auctionController.auction_delete)
     .post('/auction/edit', auctionController.auction_edit)
     .get('/auction/list', auctionController.auction_list)
@@ -42,6 +41,5 @@ module.exports = Router({mergeParams: true})
     .get('/auction/:id', auctionController.auction_get_by_id)
     .get('/comment/auction/:id', commentController.comment_get_by_auction_id)
     .post('/comment', commentController.comment_create)
-.post('/auction/create', upload.single('thumbnail_file'), auctionController.auction_create);
+    .post('/auction/create', upload.single('thumbnail_file'), auctionController.auction_create);
 
-;

@@ -7,7 +7,7 @@ const multer = require('multer');
 const upload = require('../middleware/multerConfig'); // Assuming multer is configured as shown above
 const { bucket } = require("../middleware/firebase-config"); // Ensure this is correctly pointing to your Firebase config
 
-exports.auction_create = upload.single('thumbnail_file'), asyncHandler(async (req, res, next) => {
+exports.auction_create = upload.single('thumbnail_file', asyncHandler(async (req, res, next) =>{
     const auction = new Auction(req.body);
 
     if (req.file) { // Checking if there's a file in the request processed by multer

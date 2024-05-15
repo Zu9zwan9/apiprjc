@@ -95,7 +95,7 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
     if (result) {
         res.status(200).json({message: "success"});
     } else {
-        res.status(422).json({mesasge: "error", id: req.body._id});
+        res.status(422).json({message: "error", id: req.body._id});
     }
 });
 
