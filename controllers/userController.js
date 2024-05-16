@@ -4,6 +4,8 @@ const roleTypeEnum = require("../types/enums/roleTypeEnum");
 const bcrypt = require('bcrypt');
 const { Socket } = require("socket.io");
 const path = require('path');
+const {bucket} = require("../middleware/firebase-config");
+const {getDownloadURL} = require("firebase-admin/storage");
 
 exports.user_auth = asyncHandler(async (req, res, next) => {
 
@@ -67,9 +69,16 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
 
 
             if (thumbnail_file) {
-                user.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
-    
-                await thumbnail_file.mv(__dirname + '/../files/' + user.thumbnail);
+                const buffer = thumbnail_file.data;
+                console.log("buffer")
+                console.log(buffer);
+                const filename= thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
+                console.log(filename);
+                await bucket.file(filename).save(buffer);
+                const fileRef = bucket.file(filename);
+                const url = await getDownloadURL(fileRef)
+                console.log(url);
+                user.thumbnail =url
             }
         }
 

@@ -76,16 +76,16 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
 
 
             if (thumbnail_file) {
-                    const buffer = thumbnail_file.data;
-                    console.log("buffer")
-                    console.log(buffer);
-                    const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
-                    console.log(filename);
-                    await bucket.file(filename).save(buffer);
-                    const fileRef = bucket.file(thumbnail_file);
-                    const url = await getDownloadURL(fileRef)
-                    console.log(url);
-                    auction.thumbnail = url;
+                const buffer = thumbnail_file.data;
+                console.log("buffer")
+                console.log(buffer);
+                const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
+                console.log(filename);
+                await bucket.file(filename).save(buffer);
+                const fileRef = bucket.file(filename);
+                const url = await getDownloadURL(fileRef)
+                console.log(url);
+                auction.thumbnail = url;
             }
         }
 
