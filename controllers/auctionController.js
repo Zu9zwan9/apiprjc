@@ -3,7 +3,7 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
-const uploadToFirebase = require('../../api/middleware/firebaseUpload');
+const uploadToFirebase = require('../middleware/firebaseUpload');
 exports.auction_create = asyncHandler(async (req, res, next) => {
     const auction = new Auction(req.body);
 

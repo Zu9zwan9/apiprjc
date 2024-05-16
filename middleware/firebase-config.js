@@ -18,7 +18,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const admin = require('firebase-admin');
-const serviceAccount = require('../auction-files firebase-adminsdk.json');
+const serviceAccount = require('../firebase-adminsdk.json');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
