@@ -5,6 +5,7 @@ const path = require('path');
 const AuctionRate = require("../models/auctionRate");
 const buffer = require("node:buffer");
 const {bucket} = require("../middleware/firebase-config");
+const {getDownloadURL} = require("firebase-admin/storage");
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
 
@@ -22,9 +23,9 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
             console.log(filename);
             await bucket.file(filename).save(buffer);
-
             const fileRef = bucket.file(thumbnail_file);
-
+            const url = await getDownloadURL(fileRef)
+            res.send({imgUrl: url});
             // await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
         }
     }
@@ -75,9 +76,16 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
 
 
             if (thumbnail_file) {
-                auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
-
-                await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
+                    const buffer = thumbnail_file.data;
+                    console.log("buffer")
+                    console.log(buffer);
+                    auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
+                    const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
+                    console.log(filename);
+                    await bucket.file(filename).save(buffer);
+                    const fileRef = bucket.file(thumbnail_file);
+                    const url = await getDownloadURL(fileRef)
+                    res.send({imgUrl: url});
             }
         }
 
