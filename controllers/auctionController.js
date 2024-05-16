@@ -22,7 +22,7 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             const filename = thumbnailFile.originalname.replace(/ /g, "_");
             const file = bucket.file(filename);
 
-            await bucket(bucket.name).upload(thumbnailFile.buffer, {
+            await storage.bucket(bucket.name).upload(thumbnailFile.buffer, {
                 destination: filename,
                 metadata: {
                     contentType: thumbnailFile.mimetype
