@@ -3,56 +3,57 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
-const multer = require('multer');
-const {bucket} = require("../middleware/firebase-config");
-const upload = multer({ storage: multer.memoryStorage() });
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
     upload.single('thumbnail_file')(req, res, async (err) => {
         if (err) {
-            return res.status(400).json({ message: err.message });
+            return res.status(400).json({ message: "File upload error: " + err.message });
         }
 
         const auction = new Auction(req.body);
         const thumbnailFile = req.file;
 
         if (thumbnailFile) {
-            const blob = bucket.file(thumbnailFile.originalname.replace(/ /g, "_"));
+            const filename = `${thumbnailFile.originalname}_${Date.now()}${path.extname(thumbnailFile.originalname)}`;
+            const blob = bucket.file(filename);
             const blobStream = blob.createWriteStream({
                 metadata: {
                     contentType: thumbnailFile.mimetype
                 }
             });
 
-            blobStream.on('error', (err) => {
-                next(err);
-            });
+            blobStream.on('error', err => next(err));
 
             blobStream.on('finish', async () => {
-                // Make the image public and get the URL
                 await blob.makePublic();
-                const url = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
 
-                auction.thumbnail = url;
+                auction.thumbnail = publicUrl;
                 auction.dateCreate = Date.now();
                 auction.viewCount = 0;
+                auction.status = auction.dateClose && new Date(auction.dateClose * 1000).getTime() < Date.now() ?
+                    auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE;
 
-                if (auction.dateClose) {
-                    const time = new Date(auction.dateClose * 1000).getTime();
-
-                    if (time < Date.now()) {
-                        auction.status = auctionStatusEnum.CLOSE
-                    } else {
-                        auction.status = auctionStatusEnum.ACTIVE;
-                    }
+                try {
+                    const result = await auction.save();
+                    res.json(result);
+                } catch (saveErr) {
+                    res.status(500).json({ message: "Error saving auction: " + saveErr.message });
                 }
-
-                const result = await auction.save();
-
-                res.json(result);
             });
 
             blobStream.end(thumbnailFile.buffer);
+        } else {
+            auction.dateCreate = Date.now();
+            auction.viewCount = 0;
+            auction.status = auction.dateClose && new Date(auction.dateClose * 1000).getTime() < Date.now() ?
+                auctionStatusEnum.CLOSE : auctionStatusEnum.ACTIVE;
+            try {
+                const result = await auction.save();
+                res.json(result);
+            } catch (saveErr) {
+                res.status(500).json({ message: "Error saving auction: " + saveErr.message });
+            }
         }
     });
 });
