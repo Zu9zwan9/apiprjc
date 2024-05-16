@@ -46,7 +46,7 @@ exports.user_get_by_id = asyncHandler(async (req, res, next) => {
 
         res.status(200).json(result);
     } else {
-        res.status(422).json({message: "error", id: req.params.id});
+        res.status(422).json({mesasge: "error", id: req.params.id});
     }
 });
 
@@ -83,7 +83,7 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
 
         res.status(200).json(user);
     } else {
-        res.status(422).json({message: "error", id: req.params.id});
+        res.status(422).json({mesasge: "error", id: req.params.id});
     }
 });
 
@@ -93,9 +93,9 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
 
 
     if (result) {
-        res.status(200).json({message: "success"});
+        res.status(200).json({mesasge: "success"});
     } else {
-        res.status(422).json({message: "error", id: req.body._id});
+        res.status(422).json({mesasge: "error", id: req.body._id});
     }
 });
 
