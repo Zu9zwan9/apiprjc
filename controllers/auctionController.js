@@ -19,13 +19,13 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             const buffer = thumbnail_file.data;
             console.log("buffer")
             console.log(buffer);
-            auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
             const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
             console.log(filename);
             await bucket.file(filename).save(buffer);
             const fileRef = bucket.file(thumbnail_file);
             const url = await getDownloadURL(fileRef)
-            res.send({imgUrl: url});
+            console.log(url);
+            auction.thumbnail = url;
             // await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
         }
     }
@@ -79,13 +79,13 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
                     const buffer = thumbnail_file.data;
                     console.log("buffer")
                     console.log(buffer);
-                    auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
                     const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
                     console.log(filename);
                     await bucket.file(filename).save(buffer);
                     const fileRef = bucket.file(thumbnail_file);
                     const url = await getDownloadURL(fileRef)
-                    res.send({imgUrl: url});
+                    console.log(url);
+                    auction.thumbnail = url;
             }
         }
 
