@@ -36,7 +36,6 @@ app.use(session({
 app.use((req, res, next) => {
     next();
 });
-app.use('/uploads', express.static('uploads'));
 
 passport.serializeUser((user, done) => {
     done(null, user.id); // Serialize user by their ID
