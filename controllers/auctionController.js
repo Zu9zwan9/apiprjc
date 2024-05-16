@@ -3,9 +3,11 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
+const {bucket} = require("../middleware/firebase-config");
+const {single} = require("../middleware/multerConfig");
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
-    upload.single('thumbnail_file')(req, res, async (err) => {
+    single('thumbnail_file')(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ message: "File upload error: " + err.message });
         }
