@@ -3,19 +3,15 @@ const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
-
+const uploadToFirebase = require('../../api/middleware/firebaseUpload');
 exports.auction_create = asyncHandler(async (req, res, next) => {
-
     const auction = new Auction(req.body);
 
     if (req.files) {
-        const {thumbnail_file} = req.files;
-
+        const { thumbnail_file } = req.files;
 
         if (thumbnail_file) {
-            auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
-
-            await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
+            auction.thumbnail = await uploadToFirebase(thumbnail_file);
         }
     }
 
@@ -41,7 +37,6 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
 });
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
-
     const auction = await Auction.findById(req.body._id);
 
     if (auction) {
@@ -61,13 +56,10 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
         auction.type = req.body.type;
 
         if (req.files) {
-            const {thumbnail_file} = req.files;
-
+            const { thumbnail_file } = req.files;
 
             if (thumbnail_file) {
-                auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
-
-                await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
+                auction.thumbnail = await uploadToFirebase(thumbnail_file);
             }
         }
 
@@ -80,7 +72,7 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
         }
 
     } else {
-        res.status(422).json({message: "error"});
+        res.status(422).json({ message: "error" });
     }
 });
 
