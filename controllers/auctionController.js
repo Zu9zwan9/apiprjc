@@ -6,7 +6,6 @@ const AuctionRate = require("../models/auctionRate");
 const uploadToFirebase = require('../middleware/firebaseUpload');
 const multer = require("multer");
 const {bucket} = require("../middleware/firebase-config");
-const {bucket} = require("firebase/compat");
 const upload = multer({ storage: multer.memoryStorage() });
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
