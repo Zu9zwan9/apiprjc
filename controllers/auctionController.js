@@ -19,7 +19,10 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             console.log("buffer")
             console.log(buffer);
             auction.thumbnail = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
-            await bucket.file(thumbnail_file).save(buffer);
+            const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
+            console.log(filename);
+            await bucket.file(filename).save(buffer);
+
             const fileRef = bucket.file(thumbnail_file);
 
             // await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
