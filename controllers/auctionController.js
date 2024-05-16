@@ -4,37 +4,54 @@ const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
 const AuctionRate = require("../models/auctionRate");
 const uploadToFirebase = require('../middleware/firebaseUpload');
+const multer = require("multer");
+const {bucket} = require("../middleware/firebase-config");
+const {bucket} = require("firebase/compat");
+const upload = multer({ storage: multer.memoryStorage() });
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
-    const auction = new Auction(req.body);
 
-    if (req.files) {
-        const { thumbnail_file } = req.files;
-
-        if (thumbnail_file) {
-            auction.thumbnail = await uploadToFirebase(thumbnail_file);
+    upload.single('thumbnail_file')(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
         }
-    }
 
-    auction.dateCreate = Date.now();
-    auction.viewCount = 0;
+        const auction = new Auction(req.body);
+        const thumbnailFile = req.file;
 
+        if (thumbnailFile) {
+            const filename = thumbnailFile.originalname.replace(/ /g, "_");
+            const file = bucket.file(filename);
 
-    if (auction.dateClose) {
-        const time = new Date(auction.dateClose * 1000).getTime();
+            await bucket(bucket.name).upload(thumbnailFile.buffer, {
+                destination: filename,
+                metadata: {
+                    contentType: thumbnailFile.mimetype
+                },
+                public: true
+            });
 
-        if (time < Date.now()) {
-            auction.status = auctionStatusEnum.CLOSE
-        } else {
-            auction.status = auctionStatusEnum.ACTIVE;
+            const url = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+
+            auction.thumbnail = url;
+            auction.dateCreate = Date.now();
+            auction.viewCount = 0;
+
+            if (auction.dateClose) {
+                const time = new Date(auction.dateClose * 1000).getTime();
+
+                if (time < Date.now()) {
+                    auction.status = auctionStatusEnum.CLOSE
+                } else {
+                    auction.status = auctionStatusEnum.ACTIVE;
+                }
+            }
+
+            const result = await auction.save();
+
+            res.json(result);
         }
-    }
-    //console.log(Date.now());
-    //console.log((auction.dateClose) ? new  Date(auction.dateClose*1000).getTime() : "undefined");
-
-    const result = await auction.save();
-
-    res.json(result);
+    });
 });
 
 exports.auction_edit = asyncHandler(async (req, res, next) => {
