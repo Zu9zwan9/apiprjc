@@ -22,7 +22,7 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name);
             console.log(filename);
             await bucket.file(filename).save(buffer);
-            const fileRef = bucket.file(thumbnail_file);
+            const fileRef = bucket.file(filename);
             const url = await getDownloadURL(fileRef)
             console.log(url);
             auction.thumbnail = url;
