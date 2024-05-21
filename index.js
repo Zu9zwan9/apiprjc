@@ -28,8 +28,8 @@ app.use(session({
     resave: false, // Don't save session if unmodified
     saveUninitialized: false, // Don't create session until something stored
     cookie: {
-        secure: true || false, // Set to true if you're using HTTPS, false if using HTTP
-        httpOnly: true || false // Mitigates risk of client side script accessing the cookie
+        secure: true, // Set to true if you're using HTTPS, false if using HTTP
+        httpOnly: true // Mitigates risk of client side script accessing the cookie
 
     }
 }));

@@ -209,5 +209,3 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-!/insertData.js
-insertData.js

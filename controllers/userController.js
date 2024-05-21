@@ -29,13 +29,13 @@ exports.user_auth = asyncHandler(async (req, res, next) => {
             });
         } else {
             res.status(422).json({
-                "message": "Пароль не вірний"
+                "message": "user password error"
             });
         }
 
     } else {
         res.status(422).json({
-            "message": "Користувача з таким email не існує"
+            "message": "user not found by email"
         });
     }
 });
@@ -82,6 +82,7 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
             }
         }
 
+       
 
         let result = await user.save(); 
 
@@ -121,7 +122,7 @@ exports.user_registration = asyncHandler(async (req, res, next) => {
 
     if (userByEmail.length) {
         res.status(422).json({
-            "message": "Користувач з таким email вже існує"
+            "message": "user exists with this email"
         });
     } else {
         const passwordHash = await bcrypt.hash(req.body.password, 10);
