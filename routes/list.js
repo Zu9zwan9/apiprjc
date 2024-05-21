@@ -9,8 +9,7 @@ const commentController = require("../controllers/commentController");
 const categoryController = require("../controllers/categoryController");
 const auctionController = require("../controllers/auctionController");
 const authenticateToken = require("../middleware/authenticateToken");
-const carBrandController = require('../controllers/carBrandController');
-const carModelController = require('../controllers/carModelController');
+
 
 module.exports = Router({mergeParams: true})
 
