@@ -29,13 +29,13 @@ exports.user_auth = asyncHandler(async (req, res, next) => {
             });
         } else {
             res.status(422).json({
-                "message": "user password error"
+                "message": "Пароль не вірний"
             });
         }
 
     } else {
         res.status(422).json({
-            "message": "user not found by email"
+            "message": "Користувача з таким email не існує"
         });
     }
 });
@@ -48,7 +48,7 @@ exports.user_get_by_id = asyncHandler(async (req, res, next) => {
 
         res.status(200).json(result);
     } else {
-        res.status(422).json({mesasge: "error", id: req.params.id});
+        res.status(422).json({message: "error", id: req.params.id});
     }
 });
 
@@ -82,7 +82,6 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
             }
         }
 
-       
 
         let result = await user.save(); 
 
@@ -92,7 +91,7 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
 
         res.status(200).json(user);
     } else {
-        res.status(422).json({mesasge: "error", id: req.params.id});
+        res.status(422).json({message: "error", id: req.params.id});
     }
 });
 
@@ -102,9 +101,9 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
 
 
     if (result) {
-        res.status(200).json({mesasge: "success"});
+        res.status(200).json({message: "success"});
     } else {
-        res.status(422).json({mesasge: "error", id: req.body._id});
+        res.status(422).json({message: "error", id: req.body._id});
     }
 });
 
@@ -122,7 +121,7 @@ exports.user_registration = asyncHandler(async (req, res, next) => {
 
     if (userByEmail.length) {
         res.status(422).json({
-            "message": "user exists with this email"
+            "message": "Користувач з таким email вже існує"
         });
     } else {
         const passwordHash = await bcrypt.hash(req.body.password, 10);

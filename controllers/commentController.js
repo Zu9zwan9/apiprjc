@@ -25,6 +25,9 @@ exports.comment_create = asyncHandler(async (req, res, next) => {
 
     req.app.io.to(req.body.auctionId).emit("comment",comment);
 
+    // Emit an event to notify the client that the comment has been saved
+    req.app.io.emit('commentSaved', comment._id);
+
     res.json({
         comment: comment.comment,
         _id: comment._id,
