@@ -130,18 +130,6 @@ app.post('/',
 
         console.log("Request");
 
-        //const user = new User({name: 'Alex', email: 'Email', role: 'role'});
-        //u//ser.save();
-        //console.log('user', user);
-
-        /*
-        user.save((err, user) => {
-            if (err) {
-              console.log('err', err)
-            }
-            console.log('saved user', user)
-        });
-        */
         res.json("okay");
 
     });

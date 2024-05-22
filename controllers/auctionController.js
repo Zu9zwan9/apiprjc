@@ -26,7 +26,6 @@ exports.auction_create = asyncHandler(async (req, res, next) => {
             const url = await getDownloadURL(fileRef)
             console.log(url);
             auction.thumbnail = url;
-            // await thumbnail_file.mv(__dirname + '/../files/' + auction.thumbnail);
         }
     }
 
