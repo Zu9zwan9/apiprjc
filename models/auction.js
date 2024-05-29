@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const {Schema, model} = require("mongoose");
 
-const AuctionSchema = mongoose.Schema({
+const AuctionSchema = new Schema({
     name: String,
     description: String,
     price: Number,
@@ -8,8 +8,14 @@ const AuctionSchema = mongoose.Schema({
     carMileage: Number,
     color: String,
     year: Number,
-    modelId: Number,
-    brandId: Number,
+    modelId: {
+        type: Schema.Types.ObjectId,
+        ref: "CarModel"
+    },
+    brandId: {
+        type: Schema.Types.ObjectId,
+        ref: "CarBrand"
+    },
     thumbnail: String,
     viewCount: Number,
     dateCreate: Date,
@@ -20,13 +26,13 @@ const AuctionSchema = mongoose.Schema({
     type: Number
 });
 
-const favAuctionSchema = new mongoose.Schema({
+const favAuctionSchema = new Schema({
     userId: String,
     auctionId: String
 });
 
 
 
-const Auction = mongoose.model('Auction', AuctionSchema);
+const Auction = model('Auction', AuctionSchema);
 
 module.exports = Auction;

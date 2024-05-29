@@ -133,13 +133,13 @@ exports.auction_filter = asyncHandler(async (req, res, next) => {
 
     if (type.trim().length) auction.where('type', type);
 
-    const brand = parseInt(req.body.brand);
+    const brand = req.body.brand;
 
-    if (brand > 0) auction.where('brandId', brand);
+    if (brand) auction.where('brandId', brand);
 
-    const model = parseInt(req.body.model);
+    const model = req.body.model;
 
-    if (model > 0) auction.where('modelId', model);
+    if (model) auction.where('modelId', model);
 
     const category = req.body.category;
 

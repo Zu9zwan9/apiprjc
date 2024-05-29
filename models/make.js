@@ -1,28 +1,18 @@
-const mongoose = require('mongoose');
+const {mongoose, Schema} = require("mongoose");
 
-const CarBrandSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    modelList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Model'
-    }]
+const CarBrandSchema = new Schema({
+    name: String
 });
 
-const ModelSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    brand: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'CarBrand'
+const CarModelSchema = new Schema({
+    name: String,
+    brandId: {
+        type: Schema.Types.ObjectId,
+        ref: "CarBrand"
     }
 });
 
-const CarBrand = mongoose.model('CarBrand', CarBrandSchema);
-const Model = mongoose.model('Model', ModelSchema);
+const Brand = mongoose.model('CarBrand', CarBrandSchema);
+const Model = mongoose.model('CarModel', CarModelSchema);
 
-module.exports = { CarBrand, Model };
+module.exports = { Brand, Model };
