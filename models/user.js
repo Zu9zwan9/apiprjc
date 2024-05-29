@@ -12,4 +12,10 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-module.exports = User;
+async function getUser(userId) {
+    const user = await User.findById(userId);
+
+    return user;
+}
+
+module.exports = {User, getUser};

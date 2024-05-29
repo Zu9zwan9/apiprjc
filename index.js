@@ -86,8 +86,8 @@ app.io = server;
 const mongoDb = process.env.MONGO_URI;
 mongoose.connect(mongoDb);
 
-const User = require('./models/user.js');
-const AuctionRate = require('./models/auctionRate');
+const {User, getUser} = require('./models/user.js');
+const {AuctionRate, getBestBid} = require('./models/auctionRate');
 const Auction = require('./models/auction');
 const auctionStatusEnum = require('./types/enums/auctionStatusEnum');
 const {compareSync} = require("bcrypt");
@@ -110,6 +110,18 @@ cron.schedule('* * * * * *', async () => {
         item.status = auctionStatusEnum.CLOSE;
         item.save();
         console.log("close auction", item._id);
+
+        getBestBid(item._id).then(bestBid => {
+            if (bestBid) {
+                console.log(
+                    `Best Bid: price=${bestBid.value}, userId=${bestBid.userId}`);
+                getUser(bestBid.userId).then(user => {
+                    if (user) {
+                        console.log(`Winner: ${user.name} <${user.email}>`);
+                    }
+                })
+            }
+        });
 
         try {
             server.emit("auction_close", item._id);
