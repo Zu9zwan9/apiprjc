@@ -30,17 +30,22 @@ exports.addBrandWithModels = asyncHandler(async (req, res) => {
 exports.car_brand_list = asyncHandler(async (req, res, next) => {
 
     const carBrandList = await Brand.find();
+    const carModelList = await Model.find();
 
-    res.json(carBrandList);
-});
+    const resultList = carBrandList.map(brand => {
+        return {
+            "_id": brand._id,
+            "name": brand.name,
+            "modelList": carModelList
+                .filter(model => model.brandId.toString() === brand._id.toString())
+                .map(model => {
+                    return {
+                        "_id": model._id,
+                        "name": model.name,
+                    }
+                })
+        }
+    })
 
-exports.car_model_list_by_brand_id = asyncHandler(async (req, res, next) => {
-
-    const result = await Model.where("brandId", req.params.id).find();
-
-    if (result) {
-        res.status(200).json(result);
-    } else {
-        res.status(404).json({message: "error", id: req.params.id});
-    }
+    res.json(resultList);
 });

@@ -37,6 +37,5 @@ module.exports = Router({mergeParams: true})
     .get('/comment/auction/:id', commentController.comment_get_by_auction_id)
     .post('/comment', commentController.comment_create)
     .get('/brand/list', makeController.car_brand_list)
-    .get('/brand/:id/model/list', makeController.car_model_list_by_brand_id)
     .post('/brand/add-with-models', makeController.addBrandWithModels)
 ;
