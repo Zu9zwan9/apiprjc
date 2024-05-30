@@ -1,15 +1,13 @@
 const {mongoose, Schema} = require("mongoose");
 
 const CarBrandSchema = new Schema({
+    code: String,
     name: String
 });
 
 const CarModelSchema = new Schema({
     name: String,
-    brandId: {
-        type: Schema.Types.ObjectId,
-        ref: "CarBrand"
-    }
+    brandCode: String
 });
 
 const Brand = mongoose.model('CarBrand', CarBrandSchema);

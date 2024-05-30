@@ -1,126 +1,56 @@
 [{
-  "_id": {
-    "$oid": "6656477f15e8ee56a85b9f0d"
-  },
   "name": "A4",
-  "brandId": {
-    "$oid": "665643e815e8ee56a85b9ef1"
-  }
+  "brandCode": "audi"
 },
 {
-  "_id": {
-    "$oid": "6656484315e8ee56a85b9f0e"
-  },
   "name": "A5",
-  "brandId": {
-    "$oid": "665643e815e8ee56a85b9ef1"
-  }
+  "brandCode": "audi"
 },
 {
-  "_id": {
-    "$oid": "6656486f15e8ee56a85b9f0f"
-  },
   "name": "A6",
-  "brandId": {
-    "$oid": "665643e815e8ee56a85b9ef1"
-  }
+  "brandCode": "audi"
 },
 {
-  "_id": {
-    "$oid": "6656488215e8ee56a85b9f10"
-  },
   "name": "A7",
-  "brandId": {
-    "$oid": "665643e815e8ee56a85b9ef1"
-  }
+  "brandCode": "audi"
 },
 {
-  "_id": {
-    "$oid": "6656488b15e8ee56a85b9f11"
-  },
   "name": "A8",
-  "brandId": {
-    "$oid": "665643e815e8ee56a85b9ef1"
-  }
+  "brandCode": "audi"
 },
 {
-  "_id": {
-    "$oid": "6656489415e8ee56a85b9f12"
-  },
   "name": "CX5",
-  "brandId": {
-    "$oid": "6656445a15e8ee56a85b9ef4"
-  }
+  "brandCode": "mazda"
 },
 {
-  "_id": {
-    "$oid": "665648b315e8ee56a85b9f13"
-  },
   "name": "CX6",
-  "brandId": {
-    "$oid": "6656445a15e8ee56a85b9ef4"
-  }
+  "brandCode": "mazda"
 },
 {
-  "_id": {
-    "$oid": "665648dd15e8ee56a85b9f14"
-  },
   "name": "RX8",
-  "brandId": {
-    "$oid": "6656445a15e8ee56a85b9ef4"
-  }
+  "brandCode": "mazda"
 },
 {
-  "_id": {
-    "$oid": "665648ed15e8ee56a85b9f15"
-  },
   "name": "RX7",
-  "brandId": {
-    "$oid": "6656445a15e8ee56a85b9ef4"
-  }
+  "brandCode": "mazda"
 },
 {
-  "_id": {
-    "$oid": "6656490a15e8ee56a85b9f17"
-  },
   "name": "X5",
-  "brandId": {
-    "$oid": "6656446e15e8ee56a85b9ef5"
-  }
+  "brandCode": "bmw"
 },
 {
-  "_id": {
-    "$oid": "6656492415e8ee56a85b9f18"
-  },
   "name": "X6",
-  "brandId": {
-    "$oid": "6656446e15e8ee56a85b9ef5"
-  }
+  "brandCode": "bmw"
 },
 {
-  "_id": {
-    "$oid": "6656493015e8ee56a85b9f19"
-  },
   "name": "X7",
-  "brandId": {
-    "$oid": "6656446e15e8ee56a85b9ef5"
-  }
+  "brandCode": "bmw"
 },
 {
-  "_id": {
-    "$oid": "6656493715e8ee56a85b9f1a"
-  },
   "name": "X8",
-  "brandId": {
-    "$oid": "6656446e15e8ee56a85b9ef5"
-  }
+  "brandCode": "bmw"
 },
 {
-  "_id": {
-    "$oid": "6656493f15e8ee56a85b9f1b"
-  },
   "name": "X9",
-  "brandId": {
-    "$oid": "6656446e15e8ee56a85b9ef5"
-  }
+  "brandCode": "bmw"
 }]

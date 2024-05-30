@@ -1,0 +1,446 @@
+[
+  {
+    "name": "Київ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Харків",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Одеса",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Дніпро",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Донецьк",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Запоріжжя",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Львів",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Кривий Ріг",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Миколаїв",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Маріуполь",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Севастополь",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Луганськ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Вінниця",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Сімферополь",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Макіївка",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Херсон",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Чернігів",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Полтава",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Черкаси",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Хмельницький",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Чернівці",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Житомир",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Суми",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Рівне",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Горлівка",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Івано-Франківськ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Кам'янське",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Кропивницький",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Тернопіль",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Кременчук",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Луцьк",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Біла Церква",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Краматорськ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Мелітополь",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Керч",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Ужгород",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Бердянськ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Нікополь",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Слов'янськ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Бровари",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Євпаторія",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Алчевськ",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Павлоград",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Сєвєродонецьк",
+    "countryCode": "UA"
+  },
+  {
+    "name": "Варшава",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Краків",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Щецин",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Лодзь",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Вроцлав",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Зелена Гура",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Гданськ",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Познань",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Домброва Гурнича",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Бидгощ",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Катовиці",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Ченстохова",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Явожно",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Ополе",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Рибник",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Люблін",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Гдиня",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Гливиці",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Ряшів",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Бельсько-Бяла",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Кендзежин-Козле",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Торунь",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Радом",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Кельці",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Єленя Гура",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Піла",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Білосток",
+    "countryCode": "PL"
+  },
+  {
+    "name": "Братислава",
+    "countryCode": "SK"
+  },
+  {
+    "name": "Кошиці",
+    "countryCode": "SK"
+  },
+  {
+    "name": "Будапешт",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Дебрецен",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Сеґед",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Мішкольц",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Печ",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Дьйор",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Ньїредьгаза",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Кечкемет",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Секешфегервар",
+    "countryCode": "HU"
+  },
+  {
+    "name": "Бухарест",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Клуж-Напока",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Тімішоара",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Ясси",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Констанца",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Крайова",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Галац",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Брашов",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Плоєшті",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Бреїла",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Орадя",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Бакеу",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Арад",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Пітешть",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Сібіу",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Тиргу-Муреш",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Бая-Маре",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Бузеу",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Сату-Маре",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Ботошані",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Римніку-Вилча",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Сучава",
+    "countryCode": "RO"
+  },
+  {
+    "name": "П'ятра-Нямц",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Дробета-Турну-Северин",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Фокшани",
+    "countryCode": "RO"
+  },
+  {
+    "name": "Кишинів",
+    "countryCode": "MD"
+  },
+  {
+    "name": "Тирасполь",
+    "countryCode": "MD"
+  },
+  {
+    "name": "Бєльці",
+    "countryCode": "MD"
+  },
+  {
+    "name": "Бендери",
+    "countryCode": "MD"
+  }
+]

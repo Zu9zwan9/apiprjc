@@ -10,6 +10,7 @@ const categoryController = require("../controllers/categoryController");
 const auctionController = require("../controllers/auctionController");
 const authenticateToken = require("../middleware/authenticateToken");
 const makeController = require("../controllers/makeController");
+const locationController = require("../controllers/locationController");
 module.exports = Router({mergeParams: true})
 
     .get('/category/list', categoryController.category_list)
@@ -37,5 +38,5 @@ module.exports = Router({mergeParams: true})
     .get('/comment/auction/:id', commentController.comment_get_by_auction_id)
     .post('/comment', commentController.comment_create)
     .get('/brand/list', makeController.car_brand_list)
-    .post('/brand/add-with-models', makeController.addBrandWithModels)
+    .get('/country/list', locationController.country_list)
 ;
