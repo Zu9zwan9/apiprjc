@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/user");
+const {User} = require("../models/user");
 const roleTypeEnum = require("../types/enums/roleTypeEnum");
 const bcrypt = require('bcrypt');
 const { Socket } = require("socket.io");
