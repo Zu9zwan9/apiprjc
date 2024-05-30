@@ -23,7 +23,15 @@ const AuctionSchema = new Schema({
     status: Number,
     categoryId: String,
     isCommercial: Boolean,
-    type: Number
+    type: Number,
+    countryId: {
+        type: Schema.Types.ObjectId,
+        ref: "Country"
+    },
+    locationId: {
+        type: Schema.Types.ObjectId,
+        ref: "Location"
+    }
 });
 
 const favAuctionSchema = new Schema({

@@ -69,6 +69,8 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
         auction.categoryId = req.body.categoryId;
         auction.isCommercial = req.body.isCommercial;
         auction.type = req.body.type;
+        auction.countryId = req.body.countryId;
+        auction.locationId = req.body.locationId;
 
         if (req.files) {
             const {thumbnail_file} = req.files;
@@ -159,6 +161,12 @@ exports.auction_filter = asyncHandler(async (req, res, next) => {
             break;
 
     }
+
+    const country = req.body.country;
+    if (country?.length) auction.where('countryId', country);
+
+    const location = req.body.location;
+    if (location?.length) auction.where('locationId', location);
 
     const list = await auction.find();
 
