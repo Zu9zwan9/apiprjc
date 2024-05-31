@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/user");
+const {User} = require("../models/user");
 const roleTypeEnum = require("../types/enums/roleTypeEnum");
 const bcrypt = require('bcrypt');
-const { Socket } = require("socket.io");
+const {Socket} = require("socket.io");
 const path = require('path');
 const {bucket} = require("../middleware/firebase-config");
 const {getDownloadURL} = require("firebase-admin/storage");
@@ -56,7 +56,6 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
 
     const user = await User.findById(req.params.id);
 
-   
 
     if (user) {
 
@@ -72,23 +71,22 @@ exports.user_edit_by_id = asyncHandler(async (req, res, next) => {
                 const buffer = thumbnail_file.data;
                 console.log("buffer")
                 console.log(buffer);
-                const filename= thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
+                const filename = thumbnail_file.md5 + Date.now() + path.extname(thumbnail_file.name)
                 console.log(filename);
                 await bucket.file(filename).save(buffer);
                 const fileRef = bucket.file(filename);
                 const url = await getDownloadURL(fileRef)
                 console.log(url);
-                user.thumbnail =url
+                user.thumbnail = url
             }
         }
 
-       
 
-        let result = await user.save(); 
+        let result = await user.save();
 
-        console.log("id",user.id);
+        console.log("id", user.id);
 
-        req.app.io.to(user.id).emit("user",user);
+        req.app.io.to(user.id).emit("user", user);
 
         res.status(200).json(user);
     } else {

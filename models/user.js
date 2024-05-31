@@ -7,9 +7,15 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: String,
     thumbnail: String,
-    auctionRate: [{type: mongoose.Schema.Types.ObjectId, ref:"AuctionRate"}]
+    auctionRate: [{type: mongoose.Schema.Types.ObjectId, ref: "AuctionRate"}]
 });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-module.exports = User;
+async function getUser(userId) {
+    const user = await User.findById(userId);
+
+    return user;
+}
+
+module.exports = {User, getUser};

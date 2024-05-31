@@ -1,8 +1,8 @@
 const path = require('path');
-const { bucket } = require('./firebase-config');
+const {bucket} = require('./firebase-config');
 
 async function uploadToFirebase(thumbnail_file) {
-    const { stream, mimetype } = thumbnail_file;
+    const {stream, mimetype} = thumbnail_file;
     const filename = `${thumbnail_file.md5}${Date.now()}${path.extname(thumbnail_file.name)}`;
     const fileUpload = bucket.file(filename);
 

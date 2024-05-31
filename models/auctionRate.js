@@ -13,4 +13,14 @@ const AuctionRateSchema = new mongoose.Schema({
 
 const AuctionRate = mongoose.model('AuctionRate', AuctionRateSchema);
 
-module.exports = AuctionRate;
+async function getBestBid(auctionId) {
+    const bestBid = await AuctionRate
+        .where("auctionId", auctionId)
+        .sort({value: -1})
+        .sort({time: 1})
+        .findOne();
+
+    return bestBid;
+}
+
+module.exports = {AuctionRate, getBestBid};

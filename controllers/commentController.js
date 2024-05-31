@@ -23,7 +23,7 @@ exports.comment_create = asyncHandler(async (req, res, next) => {
         userName: req.body.userName,
     }).save();
 
-    req.app.io.to(req.body.auctionId).emit("comment",comment);
+    req.app.io.to(req.body.auctionId).emit("comment", comment);
 
     res.json({
         comment: comment.comment,

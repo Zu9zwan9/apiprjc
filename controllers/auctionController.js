@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Auction = require("../models/auction");
 const auctionStatusEnum = require("../types/enums/auctionStatusEnum");
 const path = require('path');
-const AuctionRate = require("../models/auctionRate");
+const {AuctionRate} = require("../models/auctionRate");
 const buffer = require("node:buffer");
 const {bucket} = require("../middleware/firebase-config");
 const {getDownloadURL} = require("firebase-admin/storage");
@@ -69,6 +69,8 @@ exports.auction_edit = asyncHandler(async (req, res, next) => {
         auction.categoryId = req.body.categoryId;
         auction.isCommercial = req.body.isCommercial;
         auction.type = req.body.type;
+        auction.countryId = req.body.countryId;
+        auction.locationId = req.body.locationId;
 
         if (req.files) {
             const {thumbnail_file} = req.files;
@@ -133,13 +135,13 @@ exports.auction_filter = asyncHandler(async (req, res, next) => {
 
     if (type.trim().length) auction.where('type', type);
 
-    const brand = parseInt(req.body.brand);
+    const brand = req.body.brand;
 
-    if (brand > 0) auction.where('brandId', brand);
+    if (brand?.length) auction.where('brandId', brand);
 
-    const model = parseInt(req.body.model);
+    const model = req.body.model;
 
-    if (model > 0) auction.where('modelId', model);
+    if (model?.length) auction.where('modelId', model);
 
     const category = req.body.category;
 
@@ -159,6 +161,12 @@ exports.auction_filter = asyncHandler(async (req, res, next) => {
             break;
 
     }
+
+    const country = req.body.country;
+    if (country?.length) auction.where('countryId', country);
+
+    const location = req.body.location;
+    if (location?.length) auction.where('locationId', location);
 
     const list = await auction.find();
 

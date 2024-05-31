@@ -13,11 +13,9 @@ const cron = require('node-cron');
 const dotenv = require('dotenv');
 require('dotenv').config();
 const isDevelopmentEnvironment = process.env.NODE_ENV !== 'production';
-require('dotenv').config();
-
 const SERVER_PORT = process.env.PORT;
-
 const app = express();
+
 
 app.use(cors());
 
@@ -86,30 +84,40 @@ app.io = server;
 const mongoDb = process.env.MONGO_URI;
 mongoose.connect(mongoDb);
 
-const User = require('./models/user.js');
-const AuctionRate = require('./models/auctionRate');
+const {User, getUser} = require('./models/user.js');
+const {AuctionRate, getBestBid} = require('./models/auctionRate');
 const Auction = require('./models/auction');
 const auctionStatusEnum = require('./types/enums/auctionStatusEnum');
 const {compareSync} = require("bcrypt");
-
+const sendEmail = require("./utils/mailer");
 
 cron.schedule('* * * * * *', async () => {
     console.log("cron tab");
 
     console.log("time: ", Math.floor(Date.now() / 1000));
     console.log(mongoose.connection.readyState);
-
-
     const list = await Auction
         .where('status', auctionStatusEnum.ACTIVE)
         .where('dateClose').lte(Math.floor(Date.now() / 1000))
         .find();
 
-    list.map(item => {
-
+    list.forEach(item => {
         item.status = auctionStatusEnum.CLOSE;
         item.save();
         console.log("close auction", item._id);
+
+        getBestBid(item._id).then(bestBid => {
+            if (bestBid) {
+                getUser(bestBid.userId).then(user => {
+                    if (user) {
+                        console.log(`Winner: ${user.name} <${user.email}>`);
+                        sendEmail(user.email, "Congratulations on Winning the Auction!",
+                            `Hello ${user.name}, you have won the auction for item ${item._id}!`,
+                            `<strong>Hello ${user.name},</strong><br>You have won the auction for item ${item._id}!`);
+                    }
+                })
+            }
+        });
 
         try {
             server.emit("auction_close", item._id);
@@ -185,8 +193,7 @@ server.on("connection", (socket) => {
 
         await auctionRate.save();
 
-      
-        
+
         console.log("send to room", data.user.name);
 
         socket.to(data.auctionId).emit("auction_rate", auctionRate);

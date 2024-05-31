@@ -1,0 +1,58 @@
+[
+  {
+    "name": "A4",
+    "brandCode": "audi"
+  },
+  {
+    "name": "A5",
+    "brandCode": "audi"
+  },
+  {
+    "name": "A6",
+    "brandCode": "audi"
+  },
+  {
+    "name": "A7",
+    "brandCode": "audi"
+  },
+  {
+    "name": "A8",
+    "brandCode": "audi"
+  },
+  {
+    "name": "CX5",
+    "brandCode": "mazda"
+  },
+  {
+    "name": "CX6",
+    "brandCode": "mazda"
+  },
+  {
+    "name": "RX8",
+    "brandCode": "mazda"
+  },
+  {
+    "name": "RX7",
+    "brandCode": "mazda"
+  },
+  {
+    "name": "X5",
+    "brandCode": "bmw"
+  },
+  {
+    "name": "X6",
+    "brandCode": "bmw"
+  },
+  {
+    "name": "X7",
+    "brandCode": "bmw"
+  },
+  {
+    "name": "X8",
+    "brandCode": "bmw"
+  },
+  {
+    "name": "X9",
+    "brandCode": "bmw"
+  }
+]
