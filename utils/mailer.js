@@ -3,17 +3,17 @@ const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.sendgrid.net',
-    port: 587,  // Use 587 for TLS
-    secure: false, // true for 465, false for other ports
+    port: 587,
+    secure: false,
     auth: {
-        user: process.env.SENDGRID_USER,  // SendGrid API key user
-        pass: process.env.SENDGRID_API_KEY  // SendGrid API key
+        user: process.env.SENDGRID_USER,
+        pass: process.env.SENDGRID_API_KEY
     }
 });
 
-function sendEmail(to, subject, text, html) {
+const sendEmail = (to, subject, text, html) => {
     const mailOptions = {
-        from: process.env.SENDGRID_EMAIL, // This should be the email verified with SendGrid
+        from: process.env.SENDGRID_EMAIL,
         to: to,
         subject: subject,
         text: text,
