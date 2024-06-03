@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 function sendEmail(to, subject, text, html) {
     const mailOptions = {
-        from: process.env.SENDGRID_VERIFIED_SENDER, // This should be the email verified with SendGrid
+        from: process.env.SENDGRID_EMAIL, // This should be the email verified with SendGrid
         to: to,
         subject: subject,
         text: text,
