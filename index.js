@@ -15,6 +15,9 @@ require('dotenv').config();
 const isDevelopmentEnvironment = process.env.NODE_ENV !== 'production';
 const SERVER_PORT = process.env.PORT;
 const app = express();
+const {calculatePriceChange} = require("./utils/common");
+const {SITE_NAME} = require("./utils/env");
+const {sendSendgridEmail} = require("./services/sendgridService");
 
 
 app.use(cors());
@@ -192,7 +195,24 @@ server.on("connection", (socket) => {
         auctionRate.auctionId = data.auctionId;
 
         await auctionRate.save();
-
+        const bestBid = await getBestBid(data.auctionId);
+        if (bestBid && bestBid._id.toString() === auctionRate._id.toString()) { // Check if the latest bid is indeed the highest
+            const auction = await Auction.findById(data.auctionId);
+            const getUsers = await User.find({followedAuctionPrice: {$in: [auction._id]}}).select('name email');
+            await Promise.all(getUsers.map(async ({name, email}) => {
+                return sendSendgridEmail({
+                    to: email,
+                    templateId: 'd-a9cd00248db7455c89f8ade5268d1be2',
+                    dynamicTemplateData: {
+                        userName: name,
+                        lotId: auction._id.toString(),
+                        currentPrice: `${auctionRate.value}$`,
+                        priceChange: `New highest bid: ${auctionRate.value}$`,
+                        siteName: SITE_NAME || 'My site'
+                    },
+                });
+            }));
+        }
 
         console.log("send to room", data.user.name);
 

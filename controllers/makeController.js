@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const {Brand, Model} = require("../models/make");
 
 exports.car_brand_list = asyncHandler(async (req, res, next) => {
-
     const carBrandList = await Brand.find();
     const carModelList = await Model.find();
 
