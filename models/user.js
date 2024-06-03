@@ -7,13 +7,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: String,
     thumbnail: String,
-    auctionRate: [{type: mongoose.Schema.Types.ObjectId, ref: "AuctionRate"}],
-    followedAuctionPrice: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Auction"
-        }
-    ]
+    auctionRate: [{type: mongoose.Schema.Types.ObjectId, ref: "AuctionRate"}]
 });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);

@@ -6,10 +6,6 @@ const {AuctionRate} = require("../models/auctionRate");
 const buffer = require("node:buffer");
 const {bucket} = require("../middleware/firebase-config");
 const {getDownloadURL} = require("firebase-admin/storage");
-const {sendSendgridEmail} = require("../services/sendgridService");
-const {calculatePriceChange} = require("../utils/common");
-const {SITE_NAME} = require("../utils/env");
-
 
 exports.auction_create = asyncHandler(async (req, res, next) => {
 
@@ -257,74 +253,4 @@ exports.user_auction_list = asyncHandler(async (req, res, next) => {
         res.status(422).json({message: "error", id: req.params.id});
     }
 
-});
-
-exports.follow_price = asyncHandler(async (req, res, next) => {
-    const {auctionId = '', userId = ''} = req.params;
-    // Check if user is exist in db
-    const getUser = await User.findById(userId).select(['_id', 'followedAuctionPrice']);
-    if (!getUser) {
-        return res.status(404).json({message: 'The user is not found'});
-    }
-    // Check if auction is exist
-    const getAuction = await Auction.findById(auctionId).select('_id');
-    if (!getAuction) {
-        return res.status(404).json({message: `The action with id ${auctionId} is not found`});
-    }
-    // Check if user is already followed this auction
-    if (getUser?.followedAuctionPrice?.findIndex(id => id.toString() === auctionId) !== -1) {
-        return res.status(403).json({message: `You are already followed this auction`});
-    }
-    // Add auction id to followed auction price list
-    await User.updateOne({
-        _id: userId
-    }, {
-        $addToSet: {
-            followedAuctionPrice: auctionId
-        }
-    });
-    res.send(200).json({message: 'You have successfully followed the auction price'})
-});
-
-exports.unfollow_price = asyncHandler(async (req, res, next) => {
-    const {auctionId = '', userId = ''} = req.params;
-    // Check if user is exist in db
-    const getUser = await User.findById(userId).select(['_id', 'followedAuctionPrice']);
-    if (!getUser) {
-        return res.status(404).json({message: 'The user is not found'});
-    }
-    // Check if auction is exist
-    const getAuction = await Auction.findById(auctionId).select('_id');
-    if (!getAuction) {
-        return res.status(404).json({message: `The action with id ${auctionId} is not found`});
-    }
-    // Check if user is already followed this auction
-    if (getUser?.followedAuctionPrice?.findIndex(id => id.toString() === auctionId) === -1) {
-        return res.status(403).json({message: `You dont follow this auction`});
-    }
-    // Remove auction id from the followed auction price list
-    await User.updateOne({
-        _id: userId
-    }, {
-        $pull: {
-            followedAuctionPrice: auctionId
-        }
-    });
-    res.send(200).json({message: 'You have successfully unfollowed the auction price'})
-});
-
-exports.check_followed_price = asyncHandler(async (req, res, next) => {
-    const {auctionId = '', userId = ''} = req.params;
-    // Check if user is exist in db
-    const getUser = await User.findById(userId).select(['_id', 'followedAuctionPrice']);
-    if (!getUser) {
-        return res.status(404).json({message: 'The user is not found'});
-    }
-    // Check if auction is exist
-    const getAuction = await Auction.findById(auctionId).select('_id');
-    if (!getAuction) {
-        return res.status(404).json({message: `The action with id ${auctionId} is not found`});
-    }
-    // Check if user followed this auction or not
-    res.send(200).json({followed: getUser?.followedAuctionPrice?.findIndex(id => id.toString() === auctionId) !== -1});
 });
