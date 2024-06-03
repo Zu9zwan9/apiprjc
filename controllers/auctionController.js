@@ -281,7 +281,7 @@ exports.follow_price = asyncHandler(async (req, res, next) => {
             followedAuctionPrice: auctionId
         }
     });
-    res.send(200).json({message: 'You have successfully followed the auction price'})
+    return res.status(200).json({ message: 'You have successfully followed the auction price' });
 });
 
 exports.unfollow_price = asyncHandler(async (req, res, next) => {
