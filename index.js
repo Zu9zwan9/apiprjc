@@ -17,7 +17,6 @@ const app = express();
 const { calculatePriceChange } = require("./utils/common");
 const { SITE_NAME } = require("./utils/env");
 const { sendSendgridEmail } = require("./services/sendgridService");
-const auction = require('./controllers/auctionController');
 const sendEmail = require("./utils/mailer");
 
 app.use(cors());
