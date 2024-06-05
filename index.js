@@ -17,6 +17,7 @@ const app = express();
 const { calculatePriceChange } = require("./utils/common");
 const { SITE_NAME } = require("./utils/env");
 const { sendSendgridEmail } = require("./services/sendgridService");
+
 const sendEmail = require("./utils/mailer");
 
 app.use(cors());
@@ -105,9 +106,15 @@ cron.schedule('* * * * * *', async () => {
                 getUser(bestBid.userId).then(user => {
                     if (user) {
                         console.log(`Winner: ${user.name} <${user.email}>`);
-                        sendEmail(user.email, "Congratulations on Winning the Auction!",
-                            `Hello ${user.name}, you have won the auction for item ${item._id}!`,
-                            `<strong>Hello ${user.name},</strong><br>You have won the auction for item ${item._id}!`);
+                        sendEmail(user.email, "Вітаємо вас з перемогою!",
+                            `Вітаємо, ${user.name}, Ви виграли лот з ID: ${item._id} ${item.name}! 
+                                <br>Ваша ціна: ${bestBid.value} $
+                               Зверніться до адміністратора для отримання додаткової інформації.
+                                 <br>Сайт: ${SITE_NAME}  `,
+                            `<strong>Вітаємо, ${user.name},</strong><br>Ви виграли лот з ID: ${item._id} ${item.name}! 
+                                <br>Ваша ціна: ${bestBid.value} $
+                               Зверніться до адміністратора для отримання додаткової інформації.
+                                 <br>Сайт: ${SITE_NAME} `);
                     }
                 })
             }
@@ -177,6 +184,8 @@ server.on("connection", (socket) => {
         const bestBid = await getBestBid(data.auctionId);
         if (bestBid && bestBid._id.toString() === auctionRate._id.toString()) {
             const auction = await Auction.findById(data.auctionId);
+            const oldPrice = auction.price;
+            const newPrice = auctionRate.value;
             const getUsers = await User.find({ followedAuctionPrice: { $in: [auction._id] } }).select('name email');
             await Promise.all(getUsers.map(async ({ name, email }) => {
                 return sendSendgridEmail({
@@ -185,8 +194,10 @@ server.on("connection", (socket) => {
                     dynamicTemplateData: {
                         userName: name,
                         lotId: auction._id.toString(),
+                        lotName: auction.name,
                         currentPrice: `${auctionRate.value}$`,
-                        priceChange: `New highest bid: ${auctionRate.value}$`,
+                        priceChange: `Нова ціна: ${auctionRate.value}$`,
+                        priceChangeDirection: `${calculatePriceChange(oldPrice, newPrice)}$`,
                         siteName: SITE_NAME || 'My site'
                     },
                 });

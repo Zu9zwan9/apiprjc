@@ -1,4 +1,6 @@
 const calculatePriceChange = (oldPrice, newPrice) => {
+
+
     const priceChange = newPrice - oldPrice;
     const direction = priceChange > 0 ? '+' : '';
 
