@@ -17,7 +17,7 @@ const app = express();
 const { calculatePriceChange } = require("./utils/common");
 const { SITE_NAME } = require("./utils/env");
 const { sendSendgridEmail } = require("./services/sendgridService");
-
+const auction = require('./controllers/auctionController');
 const sendEmail = require("./utils/mailer");
 
 app.use(cors());
@@ -108,11 +108,11 @@ cron.schedule('* * * * * *', async () => {
                         console.log(`Winner: ${user.name} <${user.email}>`);
                         sendEmail(user.email, "Вітаємо вас з перемогою!",
                             `Вітаємо, ${user.name}, Ви виграли лот з ID: ${item._id} ${item.name}! 
-                                <br>Ваша ціна: ${bestBid.value} $
+                                <br>>Ваша ставка: ${bestBid.value} $ перемогла!
                                Зверніться до адміністратора для отримання додаткової інформації.
                                  <br>Сайт: ${SITE_NAME}  `,
                             `<strong>Вітаємо, ${user.name},</strong><br>Ви виграли лот з ID: ${item._id} ${item.name}! 
-                                <br>Ваша ціна: ${bestBid.value} $
+                                <br>Ваша ставка: ${bestBid.value} $ перемогла!
                                Зверніться до адміністратора для отримання додаткової інформації.
                                  <br>Сайт: ${SITE_NAME} `);
                     }
@@ -184,8 +184,9 @@ server.on("connection", (socket) => {
         const bestBid = await getBestBid(data.auctionId);
         if (bestBid && bestBid._id.toString() === auctionRate._id.toString()) {
             const auction = await Auction.findById(data.auctionId);
-            const oldPrice = auction.price;
-            const newPrice = auctionRate.value;
+            const oldPrice = +auction?.price;
+            let req = { body: { price: auctionRate.value } };
+            const newPrice = +req.body.price;
             const getUsers = await User.find({ followedAuctionPrice: { $in: [auction._id] } }).select('name email');
             await Promise.all(getUsers.map(async ({ name, email }) => {
                 return sendSendgridEmail({
